@@ -259,3 +259,18 @@ answer.count(9);  ## list
 
 https://github.com/tnozoo/pub-HitAndBlow
 
+## 補足２
+
+コメントをいただきました
+ありがとうございます
+
+文字の重複チェックを loop で count を使うコードを書いていましたが，
+set（集合）を使えば簡単に書けますね
+
+```python
+def is_unique(player_string):
+    return (len(set(player_string)) == len(player_string));
+```
+
+上では checkSame という関数名でしたが，is_unique という関数名に変えています
+
