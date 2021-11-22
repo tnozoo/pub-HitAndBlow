@@ -170,6 +170,9 @@ def checkSame(v):
 
 ## numpy 配列の要素に条件を満たすものがあるかどうかのチェック（numpy.count_nonzero）
 
+プレイヤーが入力した数字の Blow 判定だが，
+正解の数字（answer）が numpy の配列なので，numpy.count_nonzero が使えそう
+
 numpy.count_nonzero はデフォルトでは 0 以外の要素数を返すが，
 条件式にしてあげれば，その条件を満たす要素数を返す
 
@@ -223,7 +226,7 @@ if os.name == 'nt':
 
 ## まとめ
 
-完成したソースはこちらからどうぞ
+完成したソースはこちらからどうぞ（HitAndBlow.py）
 
 https://github.com/tnozoo/pub-HitAndBlow
 
@@ -231,4 +234,28 @@ https://github.com/tnozoo/pub-HitAndBlow
 
 - 簡単だと思ったが，調べてみないと実現しないことが多々あった
 - コンソール画面で行うゲームも面白いが，やはり人と対戦でやったほうが面白い！
+
+## 補足
+
+コメントをいただきまして，numpy を使わなくても標準の random 関数だけで実現できることがわかりました
+
+ありがとうございます
+
+正解の数字は random 関数で次のようにできます
+
+```python
+answer = random.sample(range(0, 10), 4);
+```
+
+また，プレイヤーが入力した数字の Blow 判定は，
+numpy.count_nonzero を使わずに，list の count で行える
+
+```python
+np.count_nonzero(answer == 9);  ## numpy
+answer.count(9);  ## list
+```
+
+完成したソースはこちらからどうぞ（HitAndBlowNoNumpy.py）
+
+https://github.com/tnozoo/pub-HitAndBlow
 
