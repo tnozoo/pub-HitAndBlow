@@ -1,6 +1,6 @@
-import os
+import os;
 import numpy as np;
-import argparse
+import argparse;
 
 MSG_QUESTION = '%d 回目: さぁどうぞ！ Type [q] to quit.';
 MSG_ANSWER = '正解は %s でした';
@@ -24,35 +24,32 @@ def get_args():
     return(args)
 
 # 入力した文字に同一文字がないかどうか
-def checkSame(v):
-    for i in range(0, len(v)):
-        if v.count(v[i: i + 1]) > 1:
-            return False;
-    return True;
+def is_unique(player_string):
+    # 集合にして，長さが変わらなければ同一文字なし（ユニーク）
+    # 長さが変われば，同一文字あり
+    return (len(set(player_string)) == len(player_string));
 
 # 入力した文字の桁数（＝文字数）がゲームの桁数と同じかどうか
-def checkKeta(keta, v):
-    return (len(v) == keta);
+def is_correct_keta(keta, player_string):
+    return (len(player_string) == keta);
 
 # 引数が int かどうか判断する
 # int であれば True，int でなければ False を返す
-def checkInt(v):
+def is_int(player_string):
     # int 関数で int への型変換を行う
     # 行う際に型変換エラーをキャッチした場合は数字ではないと判断する
-    r = False;
     try:
-        _ = int(v);
-        r = True;
+        int(player_string);
+        return True;
     except ValueError:
-        pass;
-    return r;
+        return False;
 
-def checkGame(keta, v, answer):
+def hit_and_blow(keta, player_string, answer):
     r = False;
     hit = 0;
     blow = 0;
     for i in range(0, keta):
-        tgt = int(v[i: i + 1]);
+        tgt = int(player_string[i: i + 1]);
         if answer[i] == tgt:
             hit += 1;
         elif np.count_nonzero(answer == tgt) > 0:
@@ -61,7 +58,7 @@ def checkGame(keta, v, answer):
         r = True;
     return (r, hit, blow);
 
-def doGame(keta, answer):
+def start_game(keta, answer):
     os.system(CLEAR);
     print('*** Hit And Blow (%d 桁) ***' % (keta));
 
@@ -70,18 +67,18 @@ def doGame(keta, answer):
 
     while True:
         print(MSG_QUESTION % (seq));
-        v = input('> ');
-        if v == 'q':
+        player_string = input('> ');
+        if player_string == 'q':
             print(MSG_ANSWER % (answer));
             break;
-        elif v == 'answer':
+        elif player_string == 'answer':
             print(answer);
             continue;
         else:
-            if ((not checkKeta(keta, v)) or (not checkInt(v)) or (not checkSame(v))):
+            if ((not is_correct_keta(keta, player_string)) or (not is_int(player_string)) or (not is_unique(player_string))):
                 print(MSG_ERROR1 % (keta));
                 continue;
-            hint = checkGame(keta, v, answer);
+            hint = hit_and_blow(keta, player_string, answer);
             if hint[0]:
                 print(MSG_OK % (seq));
                 break;
@@ -99,7 +96,7 @@ def main(keta):
     answer = _seq[0: keta];
 
     # ゲーム開始
-    doGame(keta, answer);
+    start_game(keta, answer);
 
 if __name__ == '__main__':
     # コマンドライン引数を確認する
